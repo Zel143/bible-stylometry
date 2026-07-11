@@ -1,0 +1,9 @@
+data/Bible-kjv/
+data/morphhb/
+data/Nestle1904/
+data/HebrewLexicon/
+data/esv_cache.json
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store

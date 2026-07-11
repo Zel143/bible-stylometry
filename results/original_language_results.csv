@@ -1,0 +1,6 @@
+comparison,centroid_dist,perm_p,svm_cv_acc,n_chunks
+Isaiah 1-39 vs 40-66 (Hebrew),4.2322937636102225,0.0015996800639872025,0.9,14
+Undisputed Paul vs Pastorals (Greek),5.914728943117407,0.0033993201359728054,,20
+Undisputed Paul vs Hebrews (Greek),5.915373810224472,0.0011997600479904018,0.9,20
+John vs Revelation (Greek),7.577773521414699,0.0001999600079984003,1.0,17
+1 Peter vs 2 Peter (Greek),11.661903789690601,1.0,,2
