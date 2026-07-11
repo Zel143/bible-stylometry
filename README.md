@@ -157,6 +157,15 @@ See [`docs/background.md`](docs/background.md).
   Isaiah; replicating Koppel (2011) / Yoffe (2023, 2025)'s P-source separation directly
   on the Hebrew Pentateuch is a natural next corpus.
 
+### Non-goals
+
+- **Translation accuracy/quality.** This project asks whether an *authorial* stylistic
+  signal survives translation — it does not attempt to judge how faithful or "accurate"
+  any translation (KJV or otherwise) is to the source text. That's a different research
+  question (translation-quality assessment: semantic alignment to the original,
+  reference-based scoring, human judgment) requiring different methodology than the
+  function-word stylometry used here, and it's out of scope for this repo.
+
 ## Contributing
 
 Issues and PRs are welcome, especially on the open questions above. See
