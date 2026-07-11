@@ -1,0 +1,5 @@
+comparison,centroid_dist,perm_p,svm_cv_acc,n_chunks
+Undisputed vs Pastorals (raw),8.36317721868209,0.008398320335932814,,24
+Undisputed vs Pastorals (topic-residualized),9.38978483344798,0.0007998400319936012,,24
+Undisputed vs Hebrews (raw),7.4837667525838,0.0003999200159968006,0.9199999999999999,26
+Undisputed vs Hebrews (topic-residualized),5.950527241001495,0.09418116376724656,0.4066666666666666,26

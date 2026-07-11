@@ -81,6 +81,32 @@ for the full run, and [`docs/study_guide.md`](docs/study_guide.md) for a guided 
 that pairs each result with the underlying scholarly debate (`docs/background.md`) and the
 original words themselves.
 
+## Genre control
+
+Does the Pastorals split disappear once topic/subject matter is regressed out? An LDA
+topic model (6 topics, content words only — function words excluded) is fit on the
+Pauline corpus + Hebrews; each chunk's style features (function words, sentence/word
+stats) are then residualized against its topic proportions via OLS before rerunning the
+permutation test. Hebrews vs. undisputed Paul is included as a same-corpus control,
+since it's already a robust, uncontested split (see Key results above) — if genre
+control collapsed that split too, that would suggest the control was destroying real
+authorial signal rather than isolating genre confound.
+
+| Comparison | Raw p | Topic-residualized p |
+|---|---|---|
+| Undisputed Paul vs Pastorals | 0.0084 | **0.0008** (stronger) |
+| Undisputed Paul vs Hebrews | 0.0004 | 0.094 (n.s.) |
+
+The Pastorals split does *not* collapse under genre control — it sharpens, arguing
+against a pure "church-organization vocabulary" explanation. Hebrews' split, by
+contrast, weakens substantially: LDA topic 5 (`priest, high, day, angels, house, enter`)
+captures Hebrews' priesthood/tabernacle subject matter directly, and controlling for it
+removes a meaningful share of what looked like authorial signal — a useful caveat on
+how "robust" that split really is. See `src/genre_control.py`,
+`results/genre_control_results.csv`, and `results/genre_control_topics.csv` (topic-word
+lists) for the full run, and `results/figures/fig4_genre_raw.png` /
+`fig4_genre_residualized.png` for the before/after PCA plots.
+
 There's also a verse-by-verse **parallel reader**
 ([`notebooks/parallel_reader.ipynb`](notebooks/parallel_reader.ipynb), `src/reader.py`) for
 close reading: original word + transliteration + gloss, next to the full KJV verse and (with
@@ -109,6 +135,7 @@ src/features_greek.py               # Greek NT: same, via Nestle 1904 morphology
 src/chunking.py                     # shared word-count chunking helper
 src/analysis.py                     # PCA, permutation tests, SVM CV, Burrows' Delta (language-agnostic)
 src/run_original_language_analysis.py  # runs analysis.py's tests on Hebrew/Greek
+src/genre_control.py                # LDA topic model + residualization (genre-control extension)
 src/reader.py                       # verse-by-verse parallel reader (original + KJV + ESV)
 notebooks/                           # the full annotated analyses (start here)
 docs/study_guide.md                  # guided reading path: tradition, stylometry, original text
@@ -140,8 +167,9 @@ See [`docs/background.md`](docs/background.md).
 
 ## Extensions / open questions
 
-- **Genre control**: does the Pastorals split disappear once topic/genre is regressed out
-  (e.g. via LDA) before clustering?
+- ~~**Genre control**~~: done — see the "Genre control" section above. The Pastorals
+  split survives (and sharpens) once LDA topic is regressed out; Hebrews' split partly
+  weakens, since some of its distinctiveness is topically (priesthood) driven.
 - **Committee-effect baseline**: compare books with the *same* traditional author across
   *different* KJV committees to estimate the size of translator-introduced noise itself.
 - **Cross-translation replication**: repeat the pipeline on a second public-domain
@@ -165,6 +193,11 @@ See [`docs/background.md`](docs/background.md).
   question (translation-quality assessment: semantic alignment to the original,
   reference-based scoring, human judgment) requiring different methodology than the
   function-word stylometry used here, and it's out of scope for this repo.
+
+## Changelog
+
+See [`CHANGELOG.md`](CHANGELOG.md) for a running log of extensions and experiments
+(what was tested, what was found), newest first.
 
 ## Contributing
 
