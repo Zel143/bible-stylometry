@@ -138,6 +138,11 @@ See [`docs/background.md`](docs/background.md).
   Isaiah; replicating Koppel (2011) / Yoffe (2023, 2025)'s P-source separation directly
   on the Hebrew Pentateuch is a natural next corpus.
 
+## Contributing
+
+Issues and PRs are welcome, especially on the open questions above. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for ground rules and ideas.
+
 ## License
 
 Code: MIT (see `LICENSE`). KJV text is public domain.
