@@ -52,6 +52,28 @@ def svm_cv_accuracy(sub, style_cols, label_col, cv=5):
     return cross_val_score(SVC(kernel="linear"), X, sub[label_col], cv=cv).mean()
 
 
+def svm_feature_weights(sub, style_cols, label_col):
+    """Fit a linear SVM on the full (sub)set and return each feature's weight,
+    alongside its raw per-group mean, ranked by |weight|.
+
+    A linear SVM's decision is a weighted sum of the (standardized) features, so
+    the fitted coefficients say which features actually drove the separation —
+    this is what accuracy/p-value numbers alone don't show. Positive weight means
+    the feature pushes toward `groups[0]` (alphabetically first label); negative
+    means it pushes toward `groups[1]`.
+    """
+    groups = sorted(sub[label_col].unique())
+    X = StandardScaler().fit_transform(sub[style_cols])
+    y = (sub[label_col] == groups[0]).values
+    clf = SVC(kernel="linear").fit(X, y)
+    weights = pd.Series(clf.coef_[0], index=style_cols, name="weight")
+    means = sub.groupby(label_col)[style_cols].mean().T
+    means.columns = [f"mean_{g}" for g in means.columns]
+    out = weights.to_frame().join(means)
+    out["abs_weight"] = out["weight"].abs()
+    return out.sort_values("abs_weight", ascending=False).drop(columns="abs_weight")
+
+
 def burrows_delta_z(df, fw_cols, reference_rows):
     """Z-score function-word columns against a reference subset's mean/std."""
     mu = df.loc[reference_rows, fw_cols].mean()
@@ -73,6 +95,7 @@ if __name__ == "__main__":
     obs, p = permutation_test(isa, style_cols, "label")
     acc = svm_cv_accuracy(isa, style_cols, "label")
     results.append(("Isaiah 1-39 vs 40-66", obs, p, acc, len(isa)))
+    svm_feature_weights(isa, style_cols, "label").to_csv(os.path.join(results_dir, "feature_weights_isaiah.csv"))
 
     # ---- CASE 2: Pauline corpus (all Second Westminster Company) ----
     paul_groups = ["undisputed", "disputed_deutero", "pastoral", "non_pauline"]
@@ -83,11 +106,13 @@ if __name__ == "__main__":
     up = df[df.group.isin(["undisputed", "pastoral"])].reset_index(drop=True)
     obs, p = permutation_test(up, style_cols, "group")
     results.append(("Undisputed Paul vs Pastorals", obs, p, np.nan, len(up)))
+    svm_feature_weights(up, style_cols, "group").to_csv(os.path.join(results_dir, "feature_weights_pastorals.csv"))
     # Undisputed vs Hebrews
     uh = df[df.group.isin(["undisputed", "non_pauline"])].reset_index(drop=True)
     obs, p = permutation_test(uh, style_cols, "group")
     acc = svm_cv_accuracy(uh, style_cols, "group")
     results.append(("Undisputed Paul vs Hebrews", obs, p, acc, len(uh)))
+    svm_feature_weights(uh, style_cols, "group").to_csv(os.path.join(results_dir, "feature_weights_hebrews.csv"))
 
     # ---- CASE 3: Johannine (John: 2nd Oxford; Revelation: 2nd Oxford too) ----
     joh = df[df.group.isin(["johannine_gospel", "johannine_apoc"])].reset_index(drop=True)
@@ -95,6 +120,7 @@ if __name__ == "__main__":
     obs, p = permutation_test(joh, style_cols, "group")
     acc = svm_cv_accuracy(joh, style_cols, "group")
     results.append(("John vs Revelation", obs, p, acc, len(joh)))
+    svm_feature_weights(joh, style_cols, "group").to_csv(os.path.join(results_dir, "feature_weights_john_revelation.csv"))
 
     # ---- CASE 4: 1 Peter vs 2 Peter (tiny sample — expect low power) ----
     pet = df[df.group.isin(["petrine_1", "petrine_2"])].reset_index(drop=True)
