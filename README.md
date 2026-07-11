@@ -14,6 +14,25 @@ overwritten by the KJV translators' own house style? The KJV was produced by six
 separate committees, each with its own assigned books — so any English-level style
 difference *within* a single committee's assigned block cannot be a translation artifact.
 
+## In plain English
+
+Everyone has their own way of talking — favorite little words, sentence habits — even
+when they're not trying to. This project checks whether biblical texts that are
+*supposed* to be written by the same person actually sound like it, by counting how
+often each text uses small, forgettable words ("the," "and," "thy," "unto") rather than
+what it's about.
+
+The catch: the Bible most people read (the KJV) is a translation, made centuries ago by
+several different teams. So if two "same author" texts sound different, is that the
+original writer, or just a translator's habit? This project checks pairs where we
+*know* the same translation team did both halves — so if a style difference shows up
+anyway, it can't be blamed on the translators. It also checks the original Hebrew and
+Greek directly, and teaches a computer to try to tell the styles apart (that's the
+machine-learning piece), with a statistical test for whether its "guess" could just be
+luck. Finally, it asks the computer *which specific words* gave it away, instead of
+just reporting a confidence score — e.g. "this half uses 'thy' three times more than
+the other half."
+
 ## Key results
 
 | Comparison | Same KJV committee? | Permutation p | 5-fold SVM accuracy |
@@ -130,10 +149,10 @@ See [`docs/background.md`](docs/background.md).
   translations are stronger evidence of authorial (not translational) origin. (Partially
   addressed from the other direction: the original-language extension above tests the
   *source* text directly rather than a second translation.)
-- **Feature attribution**: report which specific function words / POS patterns drive
-  each separation. (Partially addressed for John vs. Revelation — see
-  `docs/study_guide.md` §4 on καί/δέ frequency — but not yet done systematically for
-  the other comparisons.)
+- ~~**Feature attribution**~~: done — `src/analysis.py`'s `svm_feature_weights()` ranks
+  each comparison's function words by SVM weight (`results/feature_weights_*.csv`,
+  with plots and interpretation in `notebooks/kjv_stylometry_project.ipynb`). See also
+  `docs/study_guide.md` §4 on καί/δέ frequency for John vs. Revelation specifically.
 - **Hebrew Torah (P vs. non-P)**: this project's Hebrew extension currently covers only
   Isaiah; replicating Koppel (2011) / Yoffe (2023, 2025)'s P-source separation directly
   on the Hebrew Pentateuch is a natural next corpus.
