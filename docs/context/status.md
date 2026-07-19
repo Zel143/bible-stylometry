@@ -10,17 +10,27 @@ Stylometric analysis testing whether authorial-voice differences known from Hebr
 biblical scholarship (Isaiah 1–39 vs 40–66, undisputed Paul vs Pastorals, Paul vs Hebrews,
 John vs Revelation, 1 Peter vs 2 Peter) survive translation into the KJV, using
 function-word frequencies, permutation tests, SVM cross-validation, and Burrows' Delta.
-The core pipeline, the original-language (Hebrew/Greek) extension, and a genre-control
-extension are all built and have produced results. The project is in a mature, working
-state — currently between extensions, with a few open questions still unaddressed.
+The core pipeline plus five extensions (original-language, genre control, committee
+baseline, cross-translation, Torah P-source split) are all built and have produced
+results. Every extension listed in the README's original "Extensions / open questions"
+list is now done — the project has no outstanding open questions as of this update.
 
 ## In progress
 
-- Working through the two remaining open questions in order: cross-translation
-  replication (WEB) just finished; Hebrew Torah P-source split up next.
+- Nothing actively in flight. Just finished the last of the three open questions
+  (Hebrew Torah P-source split) that were worked through in order this session
+  (committee baseline → cross-translation replication → Torah P-source split).
 
 ## Done
 
+- Hebrew Torah P vs non-P source split (2026-07-20): `src/features_torah.py` replicates
+  the documentary-hypothesis Priestly (P) vs non-Priestly (J/E) split on Genesis/Exodus/
+  Leviticus/Numbers (OSHB/WLC), at whole-chapter resolution, excluding chapters known to
+  interweave sources verse-by-verse (flood narrative, Korah cycle, etc.). Result:
+  p = 0.0002, SVM 5-fold accuracy 0.88 (n = 41 chunks, ~60k words) — the split reproduces
+  strongly. Flagged as a first-pass, chapter-granularity replication, not verse-exact.
+  Also generalized `src/features_hebrew.py`'s Isaiah-only XML parsing into a reusable
+  loader for any Pentateuch book. See README's new "Hebrew Torah" section and `CHANGELOG.md`.
 - Cross-translation replication (2026-07-20): `src/features_web.py` +
   `src/run_web_replication.py` rerun the five key comparisons on the World
   English Bible (independent public-domain translation, no textual/committee
@@ -65,14 +75,19 @@ state — currently between extensions, with a few open questions still unaddres
 
 ## Open questions / blockers
 
-- **Hebrew Torah (P vs. non-P) source split** not yet replicated: the Hebrew extension
-  currently only covers Isaiah; extending to the Pentateuch (per Koppel 2011 / Yoffe
-  2023, 2025) is a natural next corpus but unstarted.
-- The committee-effect baseline design doesn't cleanly separate "committee effect" from
-  genre/sample-size confounds (see Done entry above) — a cleaner isolation would need a
-  same-author pair matched on genre across committees, if one can be found.
+- No open extensions remain from the README's original list. Two known caveats worth
+  revisiting if this project continues:
+  - The committee-effect baseline design doesn't cleanly separate "committee effect" from
+    genre/sample-size confounds — a cleaner isolation would need a same-author pair
+    matched on genre across committees, if one can be found.
+  - The Torah P-source split uses whole-chapter resolution and excludes interwoven
+    chapters (flood narrative, Korah cycle, etc.) rather than a verse-exact source
+    division (e.g. Friedman 2003) — a finer-grained version would need verse-level
+    chunking infrastructure this project doesn't currently have.
+- Not yet pushed: the Torah P-source split commit (pending as of this update).
 
 ## Next up
 
-- Hebrew Torah P-source split: extend `src/features_hebrew.py` from Isaiah-only to the
-  Pentateuch and replicate the documentary-hypothesis P-source separation.
+- No specific extension queued. Possible directions if resuming: verse-level chunking
+  infrastructure (would unlock a finer-grained Torah split), or a genuinely
+  genre-matched committee-effect pair if one can be identified.

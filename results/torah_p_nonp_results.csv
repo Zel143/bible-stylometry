@@ -1,0 +1,2 @@
+comparison,centroid_dist,perm_p,svm_cv_acc,n_chunks
+Priestly (P) vs non-Priestly (J/E) Pentateuch chapters,3.905359531204609,0.0001999600079984003,0.8777777777777779,41

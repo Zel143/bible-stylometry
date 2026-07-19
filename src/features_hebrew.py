@@ -50,9 +50,9 @@ def _lemma_morphemes(lemma_field):
     return lemma_field.split()[0].split("/")
 
 
-def _parse_isaiah_xml():
-    """Return list of (chapter:int, verse:int, [(surface, lemma), ...])."""
-    path = os.path.join(MORPHHB_DIR, "wlc", "Isa.xml")
+def _parse_book_xml(fname):
+    """Return list of (chapter:int, verse:int, [(surface, lemma), ...]) for any OSHB/WLC book file."""
+    path = os.path.join(MORPHHB_DIR, "wlc", fname)
     root = ET.parse(path).getroot()
     out = []
     for chapter in root.findall(".//o:chapter", OSIS_NS):
@@ -68,6 +68,30 @@ def _parse_isaiah_xml():
             if words:
                 out.append((cnum, vnum, words))
     return out
+
+
+def _parse_isaiah_xml():
+    """Return list of (chapter:int, verse:int, [(surface, lemma), ...])."""
+    return _parse_book_xml("Isa.xml")
+
+
+# OSIS book id -> WLC filename, for the Pentateuch (documentary-hypothesis extension).
+PENTATEUCH_FILES = {"Gen": "Gen.xml", "Exod": "Exod.xml", "Lev": "Lev.xml", "Num": "Num.xml"}
+
+
+def load_book(book_id):
+    """Return list of (chapter:int, verse_text:str) tuples for any Pentateuch book id."""
+    return [(c, " ".join(f"{s}|{l}" for s, l in words))
+            for c, _v, words in _parse_book_xml(PENTATEUCH_FILES[book_id])]
+
+
+def chunk_book(book_id, chapter_filter=None, chunk_words=1500, label=None):
+    verses = load_book(book_id)
+    if chapter_filter:
+        verses = [(c, t) for c, t in verses if chapter_filter(c)]
+    chunks = chunk_by_wordcount(verses, chunk_words)
+    return [{"book": book_id, "label": label or book_id, "chunk_id": i, "text": t}
+            for i, t in enumerate(chunks)]
 
 
 def load_isaiah():

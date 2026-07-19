@@ -5,6 +5,39 @@ Notable extensions and experiments run on this project, newest first. Follows
 says what was tested and what was found, not just what code changed (see git
 history for that).
 
+## 2026-07-20 — Hebrew Torah P vs non-P (documentary hypothesis) split
+
+Added `src/features_torah.py` and generalized `src/features_hebrew.py`'s
+Isaiah-only XML parsing into a reusable `load_book`/`chunk_book` pair for
+any OSHB/WLC Pentateuch book, to replicate Koppel et al. (2011) / Yoffe et
+al. (2023, 2025)'s Priestly (P) vs non-Priestly (J/E) source separation
+directly on the Hebrew Pentateuch, per the README's "Extensions / open
+questions" list.
+
+Method: since this project's chunking only filters by whole chapter number
+(not verse), only chapters overwhelmingly and uncontroversially attributed
+to one source were included, excluding chapters known to interweave P and
+J/E verse-by-verse (flood narrative Genesis 6-9, Genesis 10-11, Exodus 6-7
+and 12, Korah cycle Numbers 16-17/20) rather than guessing at a whole-chapter
+call for those. P: Genesis 1, 17; Exodus 25-31, 35-40; all of Leviticus;
+Numbers 1-10, 15, 18, 19, 26-30, 33-36. Non-P: Genesis 3-4, 12-13, 15-16,
+18-22, 24, 27-34, 37-45, 47-48, 50; Exodus 1-5, 8-11, 13-15; Numbers 11-14,
+21-24. Ran the same permutation test / 5-fold SVM CV / feature-weight
+pipeline used elsewhere in this project.
+
+**Findings**: the split reproduces strongly at this coarser, whole-chapter
+resolution: p = 0.0002, centroid distance 3.91, SVM 5-fold accuracy 0.88
+(n = 41 chunks: 24 P, 17 non-P, spanning ~60k words). Consistent with the
+Priestly source's well-documented distinctive vocabulary and formulaic style
+(genealogies, censuses, ritual law) versus J/E's narrative style. This is a
+first-pass replication at chapter granularity, not a verse-exact
+reproduction of Friedman's (2003) or Yoffe et al.'s own source division.
+
+Outputs: `results/torah_p_nonp_features.csv`, `results/torah_p_nonp_results.csv`,
+`results/feature_weights_torah_p_nonp.csv`, `results/figures/fig7_torah_p_nonp.png`.
+Written up in the README's new "Hebrew Torah: Priestly (P) vs non-Priestly
+(J/E) source split" section.
+
 ## 2026-07-20 — Cross-translation replication (World English Bible)
 
 Added `src/features_web.py` and `src/run_web_replication.py` to check whether

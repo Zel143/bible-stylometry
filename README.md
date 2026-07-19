@@ -107,6 +107,33 @@ track authorial style rather than a quirk of one 17th-century translation team. 
 `src/features_web.py`, `src/run_web_replication.py`, `results/web_replication_results.csv`,
 and `results/figures/web_fig1_isaiah.png` / `web_fig2_paul.png` / `web_fig3_john.png`.
 
+## Hebrew Torah: Priestly (P) vs non-Priestly (J/E) source split
+
+The original-language extension above covers only Isaiah. Genesis, Exodus, Leviticus,
+and Numbers are also available as OSHB/WLC morphology, so the same permutation-test/SVM
+pipeline was pointed at the classic documentary-hypothesis P-vs-J/E split (Koppel et al.
+2011; Yoffe et al. 2023, 2025) directly:
+
+| Comparison | Permutation p | 5-fold SVM accuracy | n chunks |
+|---|---|---|---|
+| Priestly (P) vs non-Priestly (J/E) Pentateuch chapters | 0.0002 | 0.88 | 41 |
+
+This project's chunking only filters by whole chapter number (no verse-level split), so
+only chapters overwhelmingly and uncontroversially attributed to one source in mainstream
+scholarship are included — chapters where P and J/E are known to interweave verse-by-verse
+(the flood narrative, Genesis 6–9; Genesis 10–11; Exodus 6–7 and 12; the Korah cycle,
+Numbers 16–17, 20) are deliberately excluded from both groups rather than guessed at.
+P chapters: Genesis 1, 17; Exodus 25–31, 35–40; all of Leviticus; Numbers 1–10, 15, 18,
+19, 26–30, 33–36. Non-P chapters: Genesis 3–4, 12–13, 15–16, 18–22, 24, 27–34, 37–45,
+47–48, 50; Exodus 1–5, 8–11, 13–15; Numbers 11–14, 21–24.
+
+The split reproduces strongly at this coarser, whole-chapter resolution — consistent with
+the P source's well-documented distinctive vocabulary and formulaic style (genealogies,
+censuses, ritual law) versus J/E's narrative style. Treat this as a first-pass replication
+at chapter granularity, not a verse-exact reproduction of Friedman's (2003) or Yoffe et
+al.'s own source division. See `src/features_torah.py`, `results/torah_p_nonp_results.csv`,
+and `results/figures/fig7_torah_p_nonp.png`.
+
 ## Genre control
 
 Does the Pastorals split disappear once topic/subject matter is regressed out? An LDA
@@ -185,7 +212,8 @@ verse.
 
 ```
 src/features.py                     # KJV English: corpus loading, chunking, feature extraction
-src/features_hebrew.py              # Hebrew Isaiah: same, via OSHB/WLC morphology
+src/features_hebrew.py              # Hebrew Isaiah + Pentateuch loaders, via OSHB/WLC morphology
+src/features_torah.py               # Pentateuch P vs non-P (J/E) documentary-hypothesis extension
 src/features_greek.py               # Greek NT: same, via Nestle 1904 morphology
 src/chunking.py                     # shared word-count chunking helper
 src/analysis.py                     # PCA, permutation tests, SVM CV, Burrows' Delta (language-agnostic)
@@ -241,9 +269,9 @@ See [`docs/background.md`](docs/background.md).
   each comparison's function words by SVM weight (`results/feature_weights_*.csv`,
   with plots and interpretation in `notebooks/kjv_stylometry_project.ipynb`). See also
   `docs/study_guide.md` §4 on καί/δέ frequency for John vs. Revelation specifically.
-- **Hebrew Torah (P vs. non-P)**: this project's Hebrew extension currently covers only
-  Isaiah; replicating Koppel (2011) / Yoffe (2023, 2025)'s P-source separation directly
-  on the Hebrew Pentateuch is a natural next corpus.
+- ~~**Hebrew Torah (P vs. non-P)**~~: done — see the "Hebrew Torah: Priestly (P) vs
+  non-Priestly (J/E) source split" section above. The classic documentary-hypothesis
+  split reproduces strongly (p = 0.0002, SVM acc 0.88) at whole-chapter resolution.
 
 ### Non-goals
 
