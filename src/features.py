@@ -43,6 +43,11 @@ BOOKS = {
     "2Peter":        ("2Peter.json",        "Peter",   "petrine_2",   "Second Westminster"),
     "John":          ("John.json",          "John",    "johannine_gospel", "Second Oxford"),
     "Revelation":    ("Revelation.json",    "John",    "johannine_apoc",   "Second Oxford"),
+    "1John":         ("1John.json",         "John",    "johannine_epistle", "Second Westminster"),
+    "2John":         ("2John.json",         "John",    "johannine_epistle", "Second Westminster"),
+    "3John":         ("3John.json",         "John",    "johannine_epistle", "Second Westminster"),
+    "Luke":          ("Luke.json",          "Luke",    "lukan_gospel",    "Second Oxford"),
+    "Acts":          ("Acts.json",          "Luke",    "lukan_acts",      "Second Oxford"),
 }
 
 # 100 common English function words (style markers robust to topic)

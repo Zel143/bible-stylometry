@@ -107,6 +107,35 @@ how "robust" that split really is. See `src/genre_control.py`,
 lists) for the full run, and `results/figures/fig4_genre_raw.png` /
 `fig4_genre_residualized.png` for the before/after PCA plots.
 
+## Committee-effect baseline
+
+The rest of this project argues that a same-committee stylistic split can't be a
+translation artifact, since one company translated both halves. But how much
+stylistic noise does a company introduce on its own? Two same-traditional-author
+pairs isolate that:
+
+| Comparison | Same KJV committee? | Permutation p | 5-fold SVM accuracy |
+|---|---|---|---|
+| Gospel of John vs 1–3 John | No (2nd Oxford vs 2nd Westminster) | 0.0002 | — (4 epistle chunks, below fold count) |
+| Luke vs Acts | Yes (2nd Oxford, both) | 0.0002 | 0.82 |
+
+Both pairs separate significantly — including Luke vs Acts, where committee *and*
+traditional author are both held constant. That's the useful finding: even in the
+best case for "no confound," this pipeline's function-word features still pick up
+a real, measurable split, most plausibly from genre/source-material differences
+between a two-volume history's two halves rather than the committee itself. That
+sets a noise floor to read the rest of this project's splits against.
+
+The cross-committee pair (John vs 1–3 John) separates by a wider margin (centroid
+distance 10.08 vs 6.55) than the same-committee control, consistent with a
+translation-company effect adding to the gap — though the two pairs differ in genre
+(gospel narrative vs. epistle) and sample size (13 gospel chunks vs. only 4 across
+the three short epistles) in ways this design doesn't fully separate from a pure
+committee effect. Treat this as a first pass rather than a clean isolation of the
+committee variable. See `src/committee_baseline.py`,
+`results/committee_baseline_results.csv`, and `results/figures/fig5_johannine_committee.png`
+/ `fig6_lukan_committee.png`.
+
 There's also a verse-by-verse **parallel reader**
 ([`notebooks/parallel_reader.ipynb`](notebooks/parallel_reader.ipynb), `src/reader.py`) for
 close reading: original word + transliteration + gloss, next to the full KJV verse and (with
@@ -136,6 +165,7 @@ src/chunking.py                     # shared word-count chunking helper
 src/analysis.py                     # PCA, permutation tests, SVM CV, Burrows' Delta (language-agnostic)
 src/run_original_language_analysis.py  # runs analysis.py's tests on Hebrew/Greek
 src/genre_control.py                # LDA topic model + residualization (genre-control extension)
+src/committee_baseline.py           # same-author, cross- vs same-committee pairs (noise-floor extension)
 src/reader.py                       # verse-by-verse parallel reader (original + KJV + ESV)
 notebooks/                           # the full annotated analyses (start here)
 docs/study_guide.md                  # guided reading path: tradition, stylometry, original text
@@ -170,8 +200,10 @@ See [`docs/background.md`](docs/background.md).
 - ~~**Genre control**~~: done — see the "Genre control" section above. The Pastorals
   split survives (and sharpens) once LDA topic is regressed out; Hebrews' split partly
   weakens, since some of its distinctiveness is topically (priesthood) driven.
-- **Committee-effect baseline**: compare books with the *same* traditional author across
-  *different* KJV committees to estimate the size of translator-introduced noise itself.
+- ~~**Committee-effect baseline**~~: done — see the "Committee-effect baseline" section
+  above. Both a cross-committee pair (John vs 1–3 John) and a same-committee control
+  (Luke vs Acts) separate significantly, giving a noise floor to read the rest of this
+  project's splits against, though the design doesn't fully isolate committee from genre.
 - **Cross-translation replication**: repeat the pipeline on a second public-domain
   translation (e.g. the World English Bible) — splits that reproduce across independent
   translations are stronger evidence of authorial (not translational) origin. (Partially

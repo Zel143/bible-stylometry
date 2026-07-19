@@ -5,6 +5,43 @@ Notable extensions and experiments run on this project, newest first. Follows
 says what was tested and what was found, not just what code changed (see git
 history for that).
 
+## 2026-07-20 — Committee-effect baseline
+
+Added `src/committee_baseline.py` to estimate how much stylistic noise a KJV
+translation company introduces on its own, per the README's "Extensions /
+open questions" list. Added `1John`, `2John`, `3John`, `Luke`, `Acts` to
+`src/features.py`'s `BOOKS` metadata to support it.
+
+Method: compare two same-traditional-author pairs. Gospel of John (Second
+Oxford company) vs. 1–3 John (Second Westminster company) isolates a
+cross-committee, same-author case — chosen over Gospel of John vs. Revelation
+(already tested elsewhere as an authorship split) because 1 John is the
+Johannine-corpus text stylistically closest to the Gospel, and its
+authorship is far less contested. Luke vs. Acts (both Second Oxford) is the
+same-committee control.
+
+**Findings**:
+- Both pairs separate significantly: John vs 1–3 John, p = 0.0002, centroid
+  distance 10.08 (n = 17 chunks, 13 gospel / 4 epistle — too few epistle
+  chunks for 5-fold CV). Luke vs Acts, p = 0.0002, centroid distance 6.55,
+  SVM 5-fold accuracy 0.82 (n = 33 chunks).
+- Luke vs Acts holding *both* author and committee constant still separates
+  significantly — this pipeline's function-word features pick up a real,
+  measurable split even in the best-case "no confound" scenario, most likely
+  from genre/source-material differences between the two halves of a single
+  two-volume history. That's a useful noise floor for reading the rest of
+  this project's splits against.
+- The cross-committee pair's larger centroid distance (10.08 vs 6.55) is
+  consistent with an added committee effect, but genre (gospel vs. epistle)
+  and sample-size imbalance aren't cleanly separated out in this design —
+  flagged as a first pass, not a clean isolation of the committee variable.
+
+Outputs: `results/committee_baseline_results.csv`,
+`results/feature_weights_johannine_committee.csv`,
+`results/figures/fig5_johannine_committee.png`,
+`results/figures/fig6_lukan_committee.png`. Written up in the README's new
+"Committee-effect baseline" section.
+
 ## 2026-07-11 — Genre control (LDA topic residualization)
 
 Added `src/genre_control.py` to test whether the Pastorals-vs-undisputed-Paul

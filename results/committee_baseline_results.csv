@@ -1,0 +1,3 @@
+comparison,centroid_dist,perm_p,svm_cv_acc,n_chunks
+"John vs 1-3 John (cross-committee, same author)",10.084879266269182,0.0001999600079984003,,17
+"Luke vs Acts (same-committee control, same author)",6.553554004607755,0.0001999600079984003,0.8190476190476191,33
