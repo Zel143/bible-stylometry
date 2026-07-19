@@ -4,6 +4,7 @@ data/Nestle1904/
 data/HebrewLexicon/
 data/WEB/
 data/esv_cache.json
+docs/reflection.md
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
