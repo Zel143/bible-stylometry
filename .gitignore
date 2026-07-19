@@ -2,6 +2,7 @@ data/Bible-kjv/
 data/morphhb/
 data/Nestle1904/
 data/HebrewLexicon/
+data/WEB/
 data/esv_cache.json
 __pycache__/
 *.pyc

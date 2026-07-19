@@ -81,6 +81,32 @@ for the full run, and [`docs/study_guide.md`](docs/study_guide.md) for a guided 
 that pairs each result with the underlying scholarly debate (`docs/background.md`) and the
 original words themselves.
 
+## Cross-translation replication
+
+All results above run on the KJV. If a split is authorial rather than a KJV-specific
+translation artifact, it should also show up in an independently-produced translation.
+The same five comparisons were rerun on the **World English Bible**
+([TehShrike/world-english-bible](https://github.com/TehShrike/world-english-bible)), a
+public-domain modern-English translation with no textual or committee relationship to
+the KJV:
+
+| Comparison | KJV p | WEB p | KJV SVM acc | WEB SVM acc |
+|---|---|---|---|---|
+| Isaiah 1–39 vs 40–66 | 0.0002 | 0.0002 | 0.96 | 0.95 |
+| Undisputed Paul vs Pastorals | 0.008 | 0.0002 | — | — |
+| Undisputed Paul vs Hebrews | 0.0004 | 0.0004 | 0.92 | 0.93 |
+| Gospel of John vs Revelation | 0.0002 | 0.0002 | 1.00 | 1.00 |
+| 1 Peter vs 2 Peter | 0.34 (n.s.) | 0.67 (n.s.) | — | — |
+
+All four significant KJV splits reproduce in the WEB at essentially the same strength
+(the Pastorals split is even sharper in the WEB), and 1–2 Peter fails to reach
+significance in both, for the same reason: too little text (2 Peter is ~1,100 words in
+either translation, well under the chunk size). Since the WEB shares no translation
+committee or textual lineage with the KJV, this is independent evidence that the splits
+track authorial style rather than a quirk of one 17th-century translation team. See
+`src/features_web.py`, `src/run_web_replication.py`, `results/web_replication_results.csv`,
+and `results/figures/web_fig1_isaiah.png` / `web_fig2_paul.png` / `web_fig3_john.png`.
+
 ## Genre control
 
 Does the Pastorals split disappear once topic/subject matter is regressed out? An LDA
@@ -166,6 +192,8 @@ src/analysis.py                     # PCA, permutation tests, SVM CV, Burrows' D
 src/run_original_language_analysis.py  # runs analysis.py's tests on Hebrew/Greek
 src/genre_control.py                # LDA topic model + residualization (genre-control extension)
 src/committee_baseline.py           # same-author, cross- vs same-committee pairs (noise-floor extension)
+src/features_web.py                 # World English Bible: corpus loading, chunking (cross-translation extension)
+src/run_web_replication.py          # runs analysis.py's tests on the WEB
 src/reader.py                       # verse-by-verse parallel reader (original + KJV + ESV)
 notebooks/                           # the full annotated analyses (start here)
 docs/study_guide.md                  # guided reading path: tradition, stylometry, original text
@@ -180,6 +208,7 @@ git clone https://github.com/aruljohn/Bible-kjv.git data/Bible-kjv
 git clone https://github.com/openscriptures/morphhb.git data/morphhb
 git clone https://github.com/biblicalhumanities/Nestle1904.git data/Nestle1904
 git clone https://github.com/openscriptures/HebrewLexicon.git data/HebrewLexicon
+git clone https://github.com/TehShrike/world-english-bible.git data/WEB
 pip install -r requirements.txt
 jupyter notebook notebooks/kjv_stylometry_project.ipynb
 ```
@@ -204,11 +233,10 @@ See [`docs/background.md`](docs/background.md).
   above. Both a cross-committee pair (John vs 1–3 John) and a same-committee control
   (Luke vs Acts) separate significantly, giving a noise floor to read the rest of this
   project's splits against, though the design doesn't fully isolate committee from genre.
-- **Cross-translation replication**: repeat the pipeline on a second public-domain
-  translation (e.g. the World English Bible) — splits that reproduce across independent
-  translations are stronger evidence of authorial (not translational) origin. (Partially
-  addressed from the other direction: the original-language extension above tests the
-  *source* text directly rather than a second translation.)
+- ~~**Cross-translation replication**~~: done — see the "Cross-translation replication"
+  section above. All four significant KJV splits reproduce in the World English Bible at
+  comparable strength; 1–2 Peter stays non-significant in both, consistent with a
+  short-text power problem rather than a KJV-specific artifact.
 - ~~**Feature attribution**~~: done — `src/analysis.py`'s `svm_feature_weights()` ranks
   each comparison's function words by SVM weight (`results/feature_weights_*.csv`,
   with plots and interpretation in `notebooks/kjv_stylometry_project.ipynb`). See also

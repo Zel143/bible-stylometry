@@ -5,6 +5,36 @@ Notable extensions and experiments run on this project, newest first. Follows
 says what was tested and what was found, not just what code changed (see git
 history for that).
 
+## 2026-07-20 — Cross-translation replication (World English Bible)
+
+Added `src/features_web.py` and `src/run_web_replication.py` to check whether
+the project's splits reproduce on a second, independent public-domain
+translation, per the README's "Extensions / open questions" list. Text
+source: [TehShrike/world-english-bible](https://github.com/TehShrike/world-english-bible),
+which shares no textual lineage or committee structure with the KJV.
+
+Method: reran the same five key comparisons (Isaiah 1–39 vs 40–66, Undisputed
+Paul vs Pastorals, Undisputed Paul vs Hebrews, Gospel of John vs Revelation,
+1 Peter vs 2 Peter) with the same function-word/permutation/SVM pipeline,
+swapping in WEB text for KJV text.
+
+**Findings**: all four splits significant in the KJV are also significant in
+the WEB, at comparable or greater strength (Isaiah p = 0.0002 in both, SVM
+acc 0.96 vs 0.95; Undisputed Paul vs Pastorals p = 0.008 (KJV) vs 0.0002
+(WEB) — sharper in the WEB; Undisputed Paul vs Hebrews p = 0.0004 in both,
+SVM acc 0.92 vs 0.93; John vs Revelation p = 0.0002 in both, SVM acc 1.00 in
+both). 1 Peter vs 2 Peter stays non-significant in both translations
+(p = 0.34 KJV, p = 0.67 WEB) — consistent with the short-text power problem
+already flagged for that pair (2 Peter is ~1,100 words regardless of
+translation) rather than a KJV-specific effect. Since the WEB was translated
+independently with no committee or textual relationship to the KJV, this is
+evidence the splits track authorial style rather than a single translation
+team's quirks.
+
+Outputs: `results/web_features.csv`, `results/web_replication_results.csv`,
+`results/figures/web_fig1_isaiah.png`, `web_fig2_paul.png`, `web_fig3_john.png`.
+Written up in the README's new "Cross-translation replication" section.
+
 ## 2026-07-20 — Committee-effect baseline
 
 Added `src/committee_baseline.py` to estimate how much stylistic noise a KJV

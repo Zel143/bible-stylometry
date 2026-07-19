@@ -16,11 +16,19 @@ state — currently between extensions, with a few open questions still unaddres
 
 ## In progress
 
-- Nothing actively in flight. Just finished the committee-effect baseline extension
-  and pushed all outstanding local commits to `origin/main`.
+- Working through the two remaining open questions in order: cross-translation
+  replication (WEB) just finished; Hebrew Torah P-source split up next.
 
 ## Done
 
+- Cross-translation replication (2026-07-20): `src/features_web.py` +
+  `src/run_web_replication.py` rerun the five key comparisons on the World
+  English Bible (independent public-domain translation, no textual/committee
+  relationship to the KJV). All four KJV-significant splits reproduce at
+  comparable strength (Pastorals split even sharper: p 0.008 → 0.0002);
+  1–2 Peter stays non-significant in both, consistent with the known
+  short-text power problem. See README's "Cross-translation replication"
+  section and `CHANGELOG.md`.
 - Committee-effect baseline (2026-07-20): `src/committee_baseline.py` compares
   Gospel of John (Second Oxford) vs. 1–3 John (Second Westminster) as a
   cross-committee, same-author pair, and Luke vs. Acts (both Second Oxford) as a
@@ -57,10 +65,6 @@ state — currently between extensions, with a few open questions still unaddres
 
 ## Open questions / blockers
 
-- **Cross-translation replication** not yet done: rerunning the pipeline on a second
-  public-domain translation (e.g. World English Bible) to check whether splits
-  reproduce independent of the KJV specifically. Partially covered already by the
-  original-language extension, but not from the "second translation" angle.
 - **Hebrew Torah (P vs. non-P) source split** not yet replicated: the Hebrew extension
   currently only covers Isaiah; extending to the Pentateuch (per Koppel 2011 / Yoffe
   2023, 2025) is a natural next corpus but unstarted.
@@ -70,5 +74,5 @@ state — currently between extensions, with a few open questions still unaddres
 
 ## Next up
 
-- Pick the next open extension: cross-translation replication (WEB) or the Hebrew
-  Torah P-source split.
+- Hebrew Torah P-source split: extend `src/features_hebrew.py` from Isaiah-only to the
+  Pentateuch and replicate the documentary-hypothesis P-source separation.
