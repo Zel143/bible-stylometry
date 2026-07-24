@@ -84,7 +84,6 @@ list is now done — the project has no outstanding open questions as of this up
     chapters (flood narrative, Korah cycle, etc.) rather than a verse-exact source
     division (e.g. Friedman 2003) — a finer-grained version would need verse-level
     chunking infrastructure this project doesn't currently have.
-- Not yet pushed: the Torah P-source split commit (pending as of this update).
 
 ## Next up
 
